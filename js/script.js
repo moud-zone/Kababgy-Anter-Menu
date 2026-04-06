@@ -1,7 +1,7 @@
 // ===== CONFIG =====
 const SHEET_CSV_URL =
    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1-DANp6M_vHov7HiZ1n2fy7tdVdOKf2GD6EbpBC5h7Wdd4rNNp1sGhZyos7CAyam-GQVXvgc0sgwF/pub?output=csv";
-const WA_NUMBER = "201099036316"; // غيّر ده برقم الواتساب الحقيقي
+const WA_NUMBER = "201028254215"; // غيّر ده برقم الواتساب الحقيقي
 
 // Sheet names (order matters for tabs)
 const SHEET_NAMES = [
