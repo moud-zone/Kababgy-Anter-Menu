@@ -29,7 +29,12 @@ function parseCSV(text) {
          const cols = line
             .split(",")
             .map((c) => c.replace(/^"|"$/g, "").trim());
-         return { price: cols[1] || "", name: cols[0] || "" };
+         return {
+            name: cols[0] || "",
+            price: cols[1] || "",
+            priceHalf: cols[2] || "",
+            priceKilo: cols[3] || ""
+         };
       })
       .filter((r) => r.name);
 }
@@ -212,6 +217,49 @@ function buildCard(item) {
    name.className = "item-name";
    name.textContent = item.name;
 
+   if (item.priceHalf && item.priceKilo) {
+      const variants = [
+         { label: "1/4 كيلو", price: item.price, name: `${item.name} (1/4 كيلو)` },
+         { label: "1/2 كيلو", price: item.priceHalf, name: `${item.name} (1/2 كيلو)` },
+         { label: "1 كيلو", price: item.priceKilo, name: `${item.name} (1 كيلو)` }
+      ];
+
+      const select = document.createElement("select");
+      select.className = "variant-select";
+      variants.forEach((v, index) => {
+         const option = document.createElement("option");
+         option.value = index;
+         option.textContent = `${v.price} ج — ${v.label}`;
+         select.appendChild(option);
+      });
+
+      const right = document.createElement("div");
+      right.className = "item-right";
+
+      const actions = document.createElement("div");
+      actions.className = "item-actions";
+      
+      let selectedVariant = variants[0];
+      actions.dataset.itemName = selectedVariant.name;
+      actions.dataset.itemPrice = selectedVariant.price;
+
+      select.addEventListener("change", (e) => {
+         selectedVariant = variants[e.target.value];
+         actions.dataset.itemName = selectedVariant.name;
+         actions.dataset.itemPrice = selectedVariant.price;
+         renderActionsForContainer(actions, selectedVariant);
+      });
+
+      renderActionsForContainer(actions, selectedVariant);
+      
+      right.appendChild(select);
+      right.appendChild(actions);
+
+      card.appendChild(name);
+      card.appendChild(right);
+      return card;
+   }
+
    const right = document.createElement("div");
    right.className = "item-right";
 
@@ -223,7 +271,7 @@ function buildCard(item) {
    actions.className = "item-actions";
    actions.dataset.itemName = item.name;
    actions.dataset.itemPrice = item.price;
-
+   
    renderActionsForContainer(actions, item);
 
    right.appendChild(price);
