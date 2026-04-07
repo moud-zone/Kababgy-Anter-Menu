@@ -33,7 +33,7 @@ function parseCSV(text) {
             name: cols[0] || "",
             price: cols[1] || "",
             priceHalf: cols[2] || "",
-            priceKilo: cols[3] || ""
+            priceKilo: cols[3] || "",
          };
       })
       .filter((r) => r.name);
@@ -163,7 +163,7 @@ function sendOrder() {
       let itemTotal = item.price * item.qty;
       totalPrice += itemTotal;
       lines.push(`- ${name} × ${item.qty} = ${itemTotal} جنيه`);
-      lines.push(""); // ← هنا
+      lines.push("");
    }
 
    lines.push("");
@@ -219,9 +219,21 @@ function buildCard(item) {
 
    if (item.priceHalf && item.priceKilo) {
       const variants = [
-         { label: "1/4 كيلو", price: item.price, name: `${item.name} (1/4 كيلو)` },
-         { label: "1/2 كيلو", price: item.priceHalf, name: `${item.name} (1/2 كيلو)` },
-         { label: "1 كيلو", price: item.priceKilo, name: `${item.name} (1 كيلو)` }
+         {
+            label: "1/4 كيلو",
+            price: item.price,
+            name: `${item.name} (1/4 كيلو)`,
+         },
+         {
+            label: "1/2 كيلو",
+            price: item.priceHalf,
+            name: `${item.name} (1/2 كيلو)`,
+         },
+         {
+            label: "1 كيلو",
+            price: item.priceKilo,
+            name: `${item.name} (1 كيلو)`,
+         },
       ];
 
       const select = document.createElement("select");
@@ -229,7 +241,7 @@ function buildCard(item) {
       variants.forEach((v, index) => {
          const option = document.createElement("option");
          option.value = index;
-         option.textContent = `${v.price} ج — ${v.label}`;
+         option.textContent = `${v.label} — ${v.price} ج `;
          select.appendChild(option);
       });
 
@@ -238,7 +250,7 @@ function buildCard(item) {
 
       const actions = document.createElement("div");
       actions.className = "item-actions";
-      
+
       let selectedVariant = variants[0];
       actions.dataset.itemName = selectedVariant.name;
       actions.dataset.itemPrice = selectedVariant.price;
@@ -251,7 +263,7 @@ function buildCard(item) {
       });
 
       renderActionsForContainer(actions, selectedVariant);
-      
+
       right.appendChild(select);
       right.appendChild(actions);
 
@@ -271,7 +283,7 @@ function buildCard(item) {
    actions.className = "item-actions";
    actions.dataset.itemName = item.name;
    actions.dataset.itemPrice = item.price;
-   
+
    renderActionsForContainer(actions, item);
 
    right.appendChild(price);
